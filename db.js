@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/mascotapp')
+require('dotenv').config();
+
+const dbUrl = process.env.DATABASE_URL || 'localhost';
+
+mongoose.connect('mongodb://'+dbUrl+'/mascotapp');
 
 const db = mongoose.connection;
 

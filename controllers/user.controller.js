@@ -4,6 +4,7 @@ const PetModel = require('../models/pet');
 const OrganizationModel = require('../models/org');
 
 const getUsers = async (ctx, next) => {
+  console.log('getUsers, ctx.body:',ctx.body);
   try {
     ctx.body = await UserModel.find()
     ctx.status = 200;
@@ -16,6 +17,8 @@ const getUsers = async (ctx, next) => {
 }
 
 const getUser = async (ctx, next) => {
+  console.log('getUser, ctx.body:',ctx.params);
+
   try {
     const id = ctx.params.usr_id
     ctx.body = await UserModel.findById(id).populate('pets.pet')
@@ -30,20 +33,20 @@ const getUser = async (ctx, next) => {
 const acceptAdoption = async (ctx, next) => {
   try {
     await UserModel.findByIdAndUpdate(ctx.params.usr_id,
-      { $push: { 
-        pets: { 
-          org: ctx.request.body.org, 
+      { $push: {
+        pets: {
+          org: ctx.request.body.org,
           pet: ctx.request.body.pet
         },
         messages: {
-          org: ctx.request.body.org, 
+          org: ctx.request.body.org,
           pet: ctx.request.body.pet,
           message: "Su solicitud ha sido aprobada",
           alert: "success"
         }}
       });
     await OrganizationModel.findByIdAndUpdate(
-      ctx.request.body.org, 
+      ctx.request.body.org,
       { $pull:
         { queries: { _id: ctx.request.body.query },
         pets: ctx.request.body.pet }
@@ -56,15 +59,15 @@ const acceptAdoption = async (ctx, next) => {
     ctx.body = {
       errors: [e.message]
     }
-  }  
+  }
 }
 
 const rejectAdoption = async (ctx, next) => {
   try {
     await UserModel.findByIdAndUpdate(ctx.params.usr_id,
-      { $push: { 
+      { $push: {
         messages: {
-          org: ctx.request.body.org, 
+          org: ctx.request.body.org,
           pet: ctx.request.body.pet,
           message: "Lo sentimos, su solicitud ha sido rechazada",
           alert: "danger"
@@ -76,7 +79,7 @@ const rejectAdoption = async (ctx, next) => {
         { queries: { _id: ctx.request.body.query } }
       });
     await PetModel.findByIdAndUpdate(
-      ctx.request.body.pet, 
+      ctx.request.body.pet,
       { $set: { available: true } }
     );
     ctx.status = 200
@@ -85,7 +88,7 @@ const rejectAdoption = async (ctx, next) => {
     ctx.body = {
       errors: [e.message]
     }
-  }  
+  }
 }
 
 const markAsRead = async (ctx, next) => {
@@ -101,7 +104,7 @@ const markAsRead = async (ctx, next) => {
     ctx.body = {
       errors: [e.message]
     }
-  }  
+  }
 }
 
 const addUser = async (ctx, next) => {
