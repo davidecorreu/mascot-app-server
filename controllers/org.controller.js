@@ -14,9 +14,12 @@ exports.getOrgs = async (ctx, next) => {
 }
 
 exports.getOrg = async (ctx, next) => {
+  // the method searches by Id or Name
+  const id = ctx.params.org_id;
+  const ObjectId = mongoose.Types.ObjectId;
+  const objId = new ObjectId( (id.length < 12) ? '123456789012' : id )
   try {
-    const id = ctx.params.org_id;
-    ctx.body = await OrgModel.findById(id).populate('pets queries.user queries.pet')
+    ctx.body = await OrgModel.findOne( { $or: [{'_id':objId}, {name: id}]}).populate('pets queries.user queries.pet')
   } catch(e) {
     ctx.status = 400;
     ctx.body = {
@@ -28,7 +31,7 @@ exports.getOrg = async (ctx, next) => {
 exports.addOrg = async (ctx, next) => {
   try {
     const newOrg = new OrgModel(ctx.request.body);
-    newOrg.save();
+    const dbResponse = await newOrg.save();
     ctx.status = 200
   } catch(e) {
     ctx.status = 400;
@@ -43,14 +46,14 @@ exports.adoptionRequest = async (ctx, next) => {
     await OrgModel.findByIdAndUpdate(
       ctx.request.body.org,
       { $push: { queries:
-        { 
-          user: ctx.request.body.user, 
+        {
+          user: ctx.request.body.user,
           pet: ctx.request.body.pet
         }},
       }
     );
     await PetModel.findByIdAndUpdate(
-      ctx.request.body.pet, 
+      ctx.request.body.pet,
       { $set: { available: false } }
     );
     ctx.status = 200
