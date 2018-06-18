@@ -32,6 +32,7 @@ exports.addOrg = async (ctx, next) => {
   try {
     const newOrg = new OrgModel(ctx.request.body);
     const dbResponse = await newOrg.save();
+    console.log('addOrg dbResponse:',dbResponse);
     ctx.status = 200
   } catch(e) {
     ctx.status = 400;

@@ -6,13 +6,18 @@ const OrganizationSchema = new mongoose.Schema({
     required: true,
     unique: true
 },
+password: {
+  type: String,
+  required: true
+},
   location: {
     type: String,
     required: true
 },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
 },
   pets: [{
     type: mongoose.Schema.Types.ObjectId,

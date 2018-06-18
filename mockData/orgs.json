@@ -1,0 +1,62 @@
+[
+    {
+        "pets": [],
+        "queries": [],
+        "_id": "5b25225a40470819177f2058",
+        "name": "Help WOW",
+        "location": "Barcelona",
+        "email": "helpwow@gmail.com",
+        "web": "www.helpwow.com",
+        "__v": 0
+    },
+    {
+        "pets": [],
+        "queries": [],
+        "_id": "5b252c63c97e6a1a1fac1c74",
+        "name": "Protectora Barcelona",
+        "location": "Barcelona",
+        "email": "info@protectorabcn.es",
+        "web": "http://www.protectorabcn.es/contactenos",
+        "__v": 0
+    },
+    {
+        "pets": [],
+        "queries": [],
+        "_id": "5b25309dc97e6a1a1fac1c76",
+        "name": "Societat Protectora d'Animals de Mataro",
+        "location": "Mataro",
+        "email": "go to web site",
+        "web": "www.protectoramataro.org",
+        "__v": 0
+    },
+    {
+        "pets": [],
+        "queries": [],
+        "_id": "5b253110c97e6a1a1fac1c77",
+        "name": "Animals sense sostre",
+        "location": "Vallirana",
+        "email": "animalssensesostre@gmail.com",
+        "web": "http://animalssensesostre.org/",
+        "__v": 0
+    },
+    {
+        "pets": [],
+        "queries": [],
+        "_id": "5b25336ec97e6a1a1fac1c78",
+        "name": "Huellas",
+        "location": "Avila",
+        "email": " info@protectorahuellas.org",
+        "web": "http://www.protectorahuellas.org",
+        "__v": 0
+    },
+    {
+        "pets": [],
+        "queries": [],
+        "_id": "5b2798c10e97971b9dbc2a07",
+        "name": "Associacio amics dels animals de palafolls",
+        "location": "Palafolls",
+        "email": "amicsanimalspalafolls@gmail.com",
+        "web": "http://www.amicsanimalspalafolls.com/",
+        "__v": 0
+    }
+]
