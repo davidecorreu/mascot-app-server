@@ -23,6 +23,7 @@ exports.getOrgs = async (ctx, next) => {
 
 exports.getOrg = async (ctx, next) => {
   // the method searches by Id or Name
+  console.log('======>>>> inside getOrg');
   const id = ctx.params.org_id;
   const ObjectId = mongoose.Types.ObjectId;
   const objId = new ObjectId( (id.length < 12) ? '123456789012' : id )

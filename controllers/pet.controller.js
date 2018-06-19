@@ -27,6 +27,7 @@ exports.getPet = async (ctx, next) => {
 
 exports.addPet = async (ctx, next) => {
   try {
+    console.log('=======>>>>> addPet ctx.request.body',ctx.request.body);
     const org_id = ctx.request.body.organization;
     const newPet = new PetModel(ctx.request.body);
     newPet.save()

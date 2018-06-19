@@ -3,6 +3,14 @@ const UserModel = require('../models/user');
 const PetModel = require('../models/pet');
 const OrganizationModel = require('../models/org');
 
+const bcrypt = require('bcrypt');
+const atob = require('atob');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
+
+const jwt_secret = process.env.JWT_SECRET;
+
 const getUsers = async (ctx, next) => {
   console.log('getUsers, ctx.body:',ctx.body);
   try {
@@ -108,9 +116,51 @@ const markAsRead = async (ctx, next) => {
 }
 
 const addUser = async (ctx, next) => {
+  if ('POST' != ctx.method ) return await next();
+  const userData = ctx.request.body;
+
+  if (!userData.hasOwnProperty('name') ||
+      !userData.hasOwnProperty('surname') ||
+      !userData.hasOwnProperty('location') ||
+      !userData.hasOwnProperty('telephone') ||
+      !userData.hasOwnProperty('email') ||
+      !userData.hasOwnProperty('password')) {
+        ctx.status = 400;
+        ctx.body = {
+          errors: ['Missing information to save a new User']
+        }
+        return await next();
+      }
+
+  let user = await UserModel.findOne({'email': userData.email});
+
+  if (user) {
+    ctx.status = 400;
+    ctx.body = {
+      errors: ['There is already a User with this email']
+    }
+    return await next();
+  }
+
+  const encryptedPassword = await bcrypt.hash(userData.password, 10);
+
+  user = {
+    name: userData.name,
+    surname: userData.surname,
+    location: userData.location,
+    telephone: userData.telephone,
+    email: userData.email,
+    password: encryptedPassword
+  }
+
   try {
-    const newUser = new UserModel(ctx.request.body);
+    const newUser = new UserModel(user);
     newUser.save();
+    const token = jwt.sign({name: user.email}, jwt_secret);
+    ctx.body = {
+      email: userData.email,
+      jwt_token: token
+    }
     ctx.status = 200
   } catch(e) {
     ctx.status = 400;
@@ -118,6 +168,8 @@ const addUser = async (ctx, next) => {
       errors: [e.message]
     }
   }
+
+
 }
 
 module.exports = { getUsers, acceptAdoption, getUser, rejectAdoption, markAsRead, addUser }

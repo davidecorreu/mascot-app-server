@@ -5,14 +5,27 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  surname: {
+    type: String,
+    required: true
+  },
   organization: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization',
     required: false
   },
+  telephone: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
-    required: false
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
   },
   pets: [{
     pet: { type: mongoose.Schema.Types.ObjectId, ref: 'Pet' },
@@ -20,10 +33,10 @@ const UserSchema = new mongoose.Schema({
   }],
   location: {
     type: String,
-    required: false
+    required: true
   },
   img: {
-    data: Buffer, 
+    data: Buffer,
     contentType: String,
     required: false
   },
