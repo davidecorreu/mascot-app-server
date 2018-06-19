@@ -11,6 +11,7 @@ router.get('/pets', PetController.getPets);
 router.post('/pets', PetController.addPet);
 
 router.get('/orgs', OrgController.getOrgs);
+router.get('/orgs/sign-in', OrgController.signIn);
 router.get('/orgs/:org_id', OrgController.getOrg);
 router.post('/orgs', OrgController.addOrg);
 router.put('/orgs/:org_id', OrgController.adoptionRequest);

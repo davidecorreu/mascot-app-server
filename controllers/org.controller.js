@@ -45,10 +45,12 @@ exports.signIn = async (ctx, next) => {
   const nameColonPassword = atob(authHeader.split('Basic ')[1]);
   const [name, password] = nameColonPassword.split(':');
 
+  console.log('Inside signIn, name:', name, 'password', password);
+
   if (!name || !password) throw new Error('Bad Credentials');
 
-  const org = await OrgModel.findOne({ $or: [{'name': orgData.name},
-                                    {'email': orgData.email}]});
+  const org = await OrgModel.findOne({ $or: [{'name': name},
+                                    {'email': name}]});
   if (!org) throw new Error('Bad user or password');
   const match = await bcrypt.compare(password, org.password);
 
@@ -59,8 +61,8 @@ exports.signIn = async (ctx, next) => {
     ctx.status = 200;
     const token = jwt.sign({name: org.name}, jwt_secret);
     ctx.body = {
-      jwt_token: token,
-      name: org.name
+      name: org.name,
+      jwt_token: token
     };
   }
 }
