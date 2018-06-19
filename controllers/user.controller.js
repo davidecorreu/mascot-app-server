@@ -168,8 +168,34 @@ const addUser = async (ctx, next) => {
       errors: [e.message]
     }
   }
-
-
 }
 
-module.exports = { getUsers, acceptAdoption, getUser, rejectAdoption, markAsRead, addUser }
+const signIn = async (ctx, next) => {
+  if ('GET' != ctx.method ) return await next();
+
+  const authHeader = ctx.headers.authorization;
+  if (!authHeader) throw new Error('No authorization header');
+
+  const emailColonPassword = atob(authHeader.split('Basic ')[1]);
+  const [email, password] = emailColonPassword.split(':');
+
+  if (!email || !password) throw new Error('Bad Credentials');
+
+  const user = await UserModel.findOne({'email': email});
+  if (!user) throw new Error('Bad email or password');
+  const match = await bcrypt.compare(password, user.password);
+
+  if (!match) {
+    ctx.status = 401;
+    return;
+  } else {
+    ctx.status = 200;
+    const token = jwt.sign({email: user.email}, jwt_secret);
+    ctx.body = {
+      email: user.email,
+      jwt_token: token
+    };
+  }
+}
+
+module.exports = { getUsers, acceptAdoption, getUser, rejectAdoption, markAsRead, addUser, signIn }

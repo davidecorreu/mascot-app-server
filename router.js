@@ -17,6 +17,7 @@ router.post('/orgs', OrgController.addOrg);
 router.put('/orgs/:org_id', OrgController.adoptionRequest);
 
 router.get('/users', UserController.getUsers);
+router.get('/users/sign-in', UserController.signIn);
 router.get('/users/:usr_id', UserController.getUser);
 router.put('/users/:usr_id/accepted', UserController.acceptAdoption);
 router.put('/users/:usr_id/rejected', UserController.rejectAdoption);
