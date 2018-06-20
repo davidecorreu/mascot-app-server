@@ -143,6 +143,16 @@ exports.adoptionRequest = async (ctx, next) => {
       { $set: { available: false } }
     );
     console.log('     petModelRes:', petModelRes);
+    const userModelRes = await UserModel.findByIdAndUpdate(
+      ctx.request.body.user,
+      { $push: { messages: {
+        pet: ctx.request.body.pet,
+        org: ctx.request.body.org,
+        message: 'Your adoption request is in process',
+        alert: 'info'
+      }}}
+    );
+    console.log('userModelRes:', userModelRes);
     ctx.status = 200
   } catch(e) {
     console.log('catched error:', e);
