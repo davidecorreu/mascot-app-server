@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const OrgModel = require('../models/org');
 const PetModel = require('../models/pet');
+const UserModel = require('../models/user');
 
 const bcrypt = require('bcrypt');
 const atob = require('atob');
@@ -63,6 +64,7 @@ exports.signIn = async (ctx, next) => {
     const token = jwt.sign({name: org.name}, jwt_secret);
     ctx.body = {
       name: org.name,
+      id: org._id,
       jwt_token: token
     };
   }
@@ -113,6 +115,7 @@ exports.addOrg = async (ctx, next) => {
     ctx.status = 200
     ctx.body = {
       name: orgData.name,
+      id: dbResponse._id,
       jwt_token: token
     }
   } catch(e) {
@@ -125,7 +128,7 @@ exports.addOrg = async (ctx, next) => {
 
 exports.adoptionRequest = async (ctx, next) => {
   try {
-    await OrgModel.findByIdAndUpdate(
+    const orgModelRes = await OrgModel.findByIdAndUpdate(
       ctx.request.body.org,
       { $push: { queries:
         {
@@ -134,12 +137,15 @@ exports.adoptionRequest = async (ctx, next) => {
         }},
       }
     );
-    await PetModel.findByIdAndUpdate(
+    console.log('     orgModelRes', orgModelRes);
+    const petModelRes = await PetModel.findByIdAndUpdate(
       ctx.request.body.pet,
       { $set: { available: false } }
     );
+    console.log('     petModelRes:', petModelRes);
     ctx.status = 200
   } catch(e) {
+    console.log('catched error:', e);
     ctx.status = 400;
     ctx.body = {
       errors: [e.message]

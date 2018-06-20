@@ -155,10 +155,11 @@ const addUser = async (ctx, next) => {
 
   try {
     const newUser = new UserModel(user);
-    newUser.save();
+    const dbResponse = await newUser.save();
     const token = jwt.sign({name: user.email}, jwt_secret);
     ctx.body = {
       email: userData.email,
+      id: dbResponse._id,
       jwt_token: token
     }
     ctx.status = 200
@@ -193,6 +194,7 @@ const signIn = async (ctx, next) => {
     const token = jwt.sign({email: user.email}, jwt_secret);
     ctx.body = {
       email: user.email,
+      id: user._id,
       jwt_token: token
     };
   }
